@@ -25,7 +25,11 @@ In a Python script, train_classifier.py is served as machine learning pipeline t
 The final output will be displayed in a flask web app with addition of two data visualizations made with Plotly. 
 <a name="pob"></a>
 ## 3. Project Objective
-This code is designed to iniate a web app which an emergency operators could exploit during a disaster (e.g. an earthquake or Tsunami), to classify a disaster text messages into several categories which then can be transmited to the responsible entity
+This web app designed for emergency operators used during a disaster to classify a text messages into several categories which then can be transmited to the responsible entity. The sample output is as follows, 
+<br/><img src="images/output.png" width=400><br/>
+In the initial page, visualisations of the data are also made available indiacting the distribution of received messages in the database that are categorized into three genre (news, directs, and social). Further, in the second visualisation, describe the shares of the messages categories for each genre.
+<br/><img src="images/bar.png" width=400>
+<br/><img src="images/heatmap.png" width=400>
 <a name="bw"></a>
 ## 4. Built With
 * Python 3+
