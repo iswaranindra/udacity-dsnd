@@ -23,6 +23,21 @@ from sklearn.decomposition import TruncatedSVD
 import pickle
 
 
+""" 
+    Load Data Function
+  
+    This is a function to load sqlite database.
+  
+    Parameters: 
+    database_filepath (str): Path of where the data resides 
+  
+    Returns: 
+    X (dataframe): Messages for prediction (feature)
+    Y (dataframe): Categories of the given messages (target)
+    category_names (list): List of categories
+  
+"""
+
 def load_data(database_filepath):
     engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql_table('Messages', engine)
@@ -32,6 +47,20 @@ def load_data(database_filepath):
 
     return X,Y, category_names
 
+""" 
+    Tokenize Function
+  
+    This function convert messages into substring. Then being stemmed with 
+    lemmatizer and finally its common morphological and inflexional endings
+    got removed with PorterStemmer.
+  
+    Parameters: 
+    text (str): Messages to be tokenized
+  
+    Returns: 
+    clean_tokens (str): Cleaned messages
+  
+"""
 
 def tokenize(text):
     tokens = word_tokenize(text)
@@ -45,6 +74,20 @@ def tokenize(text):
     
     return clean_tokens
 
+""" 
+    Build Model Function
+  
+    This function executes pipeline which consist of tokenizer, 
+    tfidf transformer, and Random Forest Classifier. Model then improved 
+    using gridsearch with several parameters given.
+  
+    Parameters: 
+    NA
+  
+    Returns: 
+    cv (model): Trained model
+  
+"""
 
 def build_model():
     pipeline = Pipeline([
@@ -64,16 +107,49 @@ def build_model():
     cv = GridSearchCV(pipeline, param_grid=parameters)
     return cv
 
+""" 
+    Evaluate Model Function
+  
+    This function will print the performance of trained model 
+    of predicting the test sets.
+  
+    Parameters: 
+    model (model): Messages to be tokenized
+    X_test (dataframe) : Test datasets of messages
+    Y_test (dataframe) : Test datasets' categories
+    category_names (list) : List of message categories
+  
+    Returns: 
+    NA
+  
+"""
 
 def evaluate_model(model, X_test, Y_test, category_names):
     Y_pred = model.predict(X_test)
     for i, col in enumerate(category_names):
         print(col)
         print(classification_report(Y_test[col], Y_pred[:, i]))
+""" 
+    Save Model Function
+  
+    This function will save the trained model in the path indicated.
+  
+    Parameters: 
+    model (model): Trained model
+    model_filepath (str) : Locations to save model
+  
+    Returns: 
+    NA
+  
+"""
 
 def save_model(model, model_filepath):
     pickle.dump(model, open(model_filepath, 'wb'))
 
+""" 
+    Main Function - program entry point. 
+
+"""
 
 def main():
     if len(sys.argv) == 3:
