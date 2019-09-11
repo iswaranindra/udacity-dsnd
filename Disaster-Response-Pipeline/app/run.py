@@ -49,47 +49,33 @@ def index():
     category =  chart_1.columns.values
     data = chart_1.values.tolist()
     
+    top_category_count = df.iloc[:,4:].sum().sort_values(ascending=False)[1:6]
+    top_category_names = list(top_category_count.index)
+    
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
-        {
-            'data': [
-                Bar(
-                    x=genre_names,
-                    y=genre_counts
-                )
-            ],
-
-            'layout': {
+        {'data': [Bar(x=genre_names,y=genre_counts)],
+         'layout': {
                 'title': 'Distribution of Message Genres',
-                'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Genre"
-                }
-            }
+                'yaxis': {'title': "Count"},
+                'xaxis': {'title': "Genre"}
+         }
         }, 
-         {
-            'data': [
-                Heatmap(
-                    z=data,
-                    x=category,
-                    y=genre
-                )
-            ],
-
-            'layout': {
+         { 'data': [Heatmap(z=data, x=category,y=genre)],
+          'layout': {
                 'title': 'Share of Categories by Genre',
-                'yaxis': {
-                    'title': "Genre"
-                },
-                'xaxis': {
-                    'title': "Categories"
-                }
+                'yaxis': { 'title': "Genre"},
+                'xaxis': {'title': "Categories"}
             }
-        }
+         },
+         {'data': [Bar(x=top_category_names,y=top_category_count)],
+          'layout': {'title': 'Top Five Categories',
+                'yaxis': {'title': "Count"},
+                'xaxis': {'title': "Categories"}
+                    }
+         } 
     ]
     
     # encode plotly graphs in JSON
