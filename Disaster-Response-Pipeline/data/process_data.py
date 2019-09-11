@@ -2,6 +2,19 @@ import sys
 import pandas as pd
 from sqlalchemy import create_engine
 
+""" 
+    Load Data Function
+  
+    This function will load csv formated data then stored in a dataframe.
+  
+    Parameters: 
+    messages_filepath (str): Location of the data
+    categories_filepath (str): Location of category list
+    
+    Returns: 
+    df (dataframe): Loaded data
+  
+"""
 
 def load_data(messages_filepath, categories_filepath):
     messages = pd.read_csv(messages_filepath)
@@ -9,6 +22,19 @@ def load_data(messages_filepath, categories_filepath):
     df = messages.merge(categories,on='id')
     return df
 
+""" 
+    Clean Data Function
+  
+    This function clean datasets by properly split the 
+    data and fixing data type.
+  
+    Parameters: 
+    df (dataframe): Datasets to be cleaned
+  
+    Returns: 
+    df (dataframe): Cleaned dataframe
+  
+"""
 
 def clean_data(df):
     categories = df['categories'].str.split(pat=';',expand=True)
@@ -26,11 +52,28 @@ def clean_data(df):
     df = df.drop_duplicates()
     
     return df
+""" 
+    Save Data Function
+  
+    This function expoer dataframe into sqlite database
+  
+    Parameters: 
+    df (dataframe): Data to be stored
+    database_filename (str): Path on where data to be stored 
+  
+    Returns: 
+    NA
+  
+"""
 
 def save_data(df, database_filename):
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('Messages', engine, index=False, if_exists='replace')
 
+""" 
+    Main Function - program entry point. 
+
+"""
 def main():
     if len(sys.argv) == 4:
 
